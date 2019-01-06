@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Cristams</title>
+    <script type="text/javascript">
+      var canvas1;
+      var draw1;
+      window.onload = function(){
+        setup();
+        setInterval(ShowSnow,35);
+      }
+
+      function setup(){
+        canvas = document.getElementById('canvas');
+        draw = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        for (var i = 0; i < flakesCount; i++) {
+          flakes[i] = new Snowflake(Math.random()*canvas.width,Math.random()*canvas.height);
+        }
+
+        draw.lineWidth = 3;
+        draw.lineCap = "round";
+        draw.strokeStyle = "#FFFFFF";
+      }
+
+      var flakesCount = 300;
+      function ShowSnow(){
+        draw.globalAlpha = 0.05;
+        draw.fillStyle = "balck";
+        draw.fillRect(0,0,canvas.width,canvas.height);
+        draw.globalAlpha = 1;
+        for (var i = 0; i < flakesCount; i++) {
+          flakes[i].show(canvas,draw);
+        }
+        r += 0.1;
+      }
+
+      var flakes = [];
+      var r = 0;
+      function Snowflake(x,y){
+        this.x = x;
+        this.y = y;
+        this.r = Math.random() * Math.PI * 2;
+        this.dx = Math.random() + 0.5;
+        this.show = function(canvas,draw){
+          this.x += Math.sin(r/this.dx)*this.dx;
+          this.y += this.dx;
+          draw.translate(this.x,this.y);
+          for (var i = 0; i < 3; i++) {
+            draw.rotate((360/3) * Math.PI / 180);
+            draw.beginPath();
+            draw.moveTo(-10,0);
+            draw.lineTo(10,0);
+            draw.stroke();
+          }
+          draw.translate(-this.x,-this.y);
+          if (this.y > canvas.height){
+            this.y = -40;
+          }
+        }
+      }
+    </script>
+  </head>
+  <body style="background-color: #000000;">
+    <canvas id="canvas" width="300" height="300" style = "position: absolute; left: 0px; top: 0px;"></canvas>
+  </body>
+</html>
